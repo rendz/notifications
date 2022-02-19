@@ -1,8 +1,8 @@
-POST {{host}}/api/notifications
+POST http://localhost:8080/api/notifications/email
 
 {
-    "sender": "anonymous",
+    "sender": "anonymous@anon.io",
     "message": "Ping",
-    "receiver": "@peter.h",
+    "receiver": "peter.h@anon.io",
 }
 ###
