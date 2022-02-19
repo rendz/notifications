@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/notifications-server/notifications-server.iml" filepath="$PROJECT_DIR$/notifications-server/notifications-server.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/repo.iml" filepath="$PROJECT_DIR$/.idea/repo.iml" />
     </modules>
   </component>

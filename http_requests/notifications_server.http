@@ -1,0 +1,8 @@
+POST {{host}}/api/notifications
+
+{
+    "sender": "anonymous",
+    "message": "Ping",
+    "receiver": "@peter.h",
+}
+###
