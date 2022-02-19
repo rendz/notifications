@@ -1,8 +1,9 @@
 POST http://localhost:8080/api/notifications/email
+Content-Type: application/json
 
 {
     "sender": "anonymous@anon.io",
     "message": "Ping",
-    "receiver": "peter.h@anon.io",
+    "receiver": "peter.h@anon.io"
 }
 ###
