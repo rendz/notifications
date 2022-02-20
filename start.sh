@@ -20,7 +20,7 @@ kafka-topics --bootstrap-server broker:9092 \
 docker exec broker \
 kafka-topics --bootstrap-server broker:9092 \
              --create \
-             --topic email-notifications
+             --topic notifications
 
 docker exec broker \
 kafka-topics --bootstrap-server broker:9092 \

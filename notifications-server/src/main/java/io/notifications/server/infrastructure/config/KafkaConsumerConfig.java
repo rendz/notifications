@@ -15,7 +15,7 @@ public class KafkaConsumerConfig {
     public ReceiverOptions<String, Notification> kafkaReceiverOptions(KafkaProperties kafkaProperties) {
         ReceiverOptions<String, Notification> basicReceiverOptions = ReceiverOptions
                 .create(kafkaProperties.buildConsumerProperties());
-        return basicReceiverOptions.subscription(Collections.singletonList("email-notifications"));
+        return basicReceiverOptions.subscription(Collections.singletonList("notifications"));
     }
 
     @Bean

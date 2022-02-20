@@ -5,7 +5,7 @@ import lombok.Data;
 import javax.validation.constraints.NotNull;
 
 @Data
-public class EmailNotificationDTO {
+public class NotificationDTO {
     @NotNull
     private String sender;
     @NotNull

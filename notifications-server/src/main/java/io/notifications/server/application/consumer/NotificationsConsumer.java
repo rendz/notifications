@@ -1,6 +1,7 @@
 package io.notifications.server.application.consumer;
 
 import io.notifications.server.domain.model.Notification;
+import io.notifications.server.domain.service.NotificationService;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,10 +15,13 @@ public class NotificationsConsumer implements CommandLineRunner {
     Logger log = LoggerFactory.getLogger(NotificationsConsumer.class);
 
     private final ReactiveKafkaConsumerTemplate<String, Notification> kafkaConsumerTemplate;
+    private final NotificationService notificationService;
 
     public NotificationsConsumer(
-            ReactiveKafkaConsumerTemplate<String, Notification> kafkaConsumerTemplate) {
+            ReactiveKafkaConsumerTemplate<String, Notification> kafkaConsumerTemplate,
+            NotificationService notificationService) {
         this.kafkaConsumerTemplate = kafkaConsumerTemplate;
+        this.notificationService = notificationService;
     }
 
     private Flux<Notification> consumeEmailNotification() {
@@ -31,8 +35,10 @@ public class NotificationsConsumer implements CommandLineRunner {
                                 consumerRecord.offset())
                 )
                 .map(ConsumerRecord::value)
-                .doOnNext(EmailNotification -> log.info("successfully consumed {}={}", Notification.class.getSimpleName(), EmailNotification))
-                .doOnError(throwable -> log.error("something bad happened while consuming : {}", throwable.getMessage()));
+                .doOnNext(notificationService::deliverNotification)
+                .doOnError(throwable -> log.error(
+                        "something bad happened while consuming : {}",
+                        throwable.getMessage()));
     }
 
     @Override
