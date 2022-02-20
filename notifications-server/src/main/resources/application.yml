@@ -1,4 +1,9 @@
-logging.level.root:  DEBUG
+logging:
+  level:
+    - root:  DEBUG
+    - org.apache.kafka.clients.NetworkClient: INFO
+    - org.apache.kafka.clients.FetchSessionHandler: INFO
+    - o.a.k.c.consumer.internals.Fetcher: INFO
 
 spring.kafka.bootstrap-servers: "localhost:9092"
 
@@ -7,3 +12,13 @@ spring.kafka.producer.key-serializer: org.apache.kafka.common.serialization.Stri
 spring.kafka.producer.value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
 spring.kafka.producer.client.id: "io.notifications.server.producer"
 spring.kafka.producer.retries: 5
+
+# consumer
+spring.kafka.consumer.group-id: "io.notifications.server"
+spring.kafka.consumer.auto-offset-reset: earliest
+spring.kafka.consumer.key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+spring.kafka.consumer.value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+# json deserializer config
+spring.kafka.properties.spring.json.trusted.packages: "*"
+spring.kafka.consumer.properties.spring.json.use.type.headers: false
+spring.kafka.consumer.properties.spring.json.value.default.type: io.notifications.server.domain.model.Notification

@@ -2,7 +2,7 @@ package io.notifications.server.application.rest;
 
 import io.notifications.server.application.request.EmailNotificationDTO;
 import io.notifications.server.domain.NotificationRepository;
-import io.notifications.server.domain.model.EmailNotification;
+import io.notifications.server.domain.model.Notification;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,7 +24,7 @@ public class NotificationsController {
     @PostMapping(consumes = {"application/json"})
     Mono<?> publishNotification(@Valid @RequestBody EmailNotificationDTO notificationDTO) {
         return notificationRepository.save(
-                new EmailNotification(
+                new Notification(
                     notificationDTO.getSender(),
                     notificationDTO.getReceiver(),
                     notificationDTO.getMessage()))

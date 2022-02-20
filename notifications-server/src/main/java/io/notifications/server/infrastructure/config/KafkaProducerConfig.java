@@ -1,6 +1,6 @@
 package io.notifications.server.infrastructure.config;
 
-import io.notifications.server.domain.model.EmailNotification;
+import io.notifications.server.domain.model.Notification;
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,7 +12,7 @@ import java.util.Map;
 @Configuration
 public class KafkaProducerConfig {
     @Bean
-    public ReactiveKafkaProducerTemplate<String, EmailNotification> notificationsProducer(
+    public ReactiveKafkaProducerTemplate<String, Notification> notificationsProducer(
             KafkaProperties properties) {
         Map<String, Object> props = properties.buildProducerProperties();
         return new ReactiveKafkaProducerTemplate<>(SenderOptions.create(props));
