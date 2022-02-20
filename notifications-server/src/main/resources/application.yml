@@ -1,1 +1,9 @@
-logging.level.root: DEBUG
+logging.level.root:  DEBUG
+
+spring.kafka.bootstrap-servers: "localhost:9092"
+
+# kafka producer
+spring.kafka.producer.key-serializer: org.apache.kafka.common.serialization.StringSerializer
+spring.kafka.producer.value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+spring.kafka.producer.client.id: "io.notifications.server.producer"
+spring.kafka.producer.retries: 5

@@ -1,4 +1,4 @@
-package io.notifications.server.adapter.rest.dto;
+package io.notifications.server.application.request;
 
 import lombok.Data;
 
