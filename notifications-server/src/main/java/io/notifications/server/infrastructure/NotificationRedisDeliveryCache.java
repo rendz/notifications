@@ -1,5 +1,6 @@
 package io.notifications.server.infrastructure;
 
+import io.notifications.server.application.consumer.NotificationsConsumer;
 import io.notifications.server.domain.NotificationDeliveryCache;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,18 +19,27 @@ public class NotificationRedisDeliveryCache implements NotificationDeliveryCache
     }
 
     @Override
-    public Mono<Void> saveDeliveryStatus(String notificationIdentifier) {
+    public Mono<Long> deleteDeliveryStatus(String notificationIdentifier) {
+        log.info("Deleting delivery status {}", notificationIdentifier);
+        return redisTemplate
+                .opsForSet()
+                .remove(
+                        getDeliveryHashmapName(notificationIdentifier),
+                        notificationIdentifier);
+    }
+
+    @Override
+    public Mono<Long> saveDeliveryStatus(String notificationIdentifier) {
+        log.info("Saving delivery status {}", notificationIdentifier);
         return redisTemplate
                 .opsForSet()
                 .add(
                         getDeliveryHashmapName(notificationIdentifier),
-                        notificationIdentifier)
-                .flatMap(r -> Mono.empty());
+                        notificationIdentifier);
     }
 
     @Override
     public Mono<Boolean> existsDeliveryStatus(String notificationIdentifier) {
-        log.info("Key: " + notificationIdentifier);
         return redisTemplate.opsForSet()
                 .isMember(
                         getDeliveryHashmapName(notificationIdentifier),
@@ -37,6 +47,6 @@ public class NotificationRedisDeliveryCache implements NotificationDeliveryCache
     }
 
     private String getDeliveryHashmapName(String key) {
-        return "delivered_notifications";
+        return "delivered_notifications_" + Math.abs(key.hashCode()) % 100;
     }
 }

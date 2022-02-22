@@ -3,7 +3,8 @@ package io.notifications.server.domain;
 import reactor.core.publisher.Mono;
 
 public interface NotificationDeliveryCache {
-    Mono<Void> saveDeliveryStatus(String notificationIdentifier);
+    Mono<Long> deleteDeliveryStatus(String notificationIdentifier);
+    Mono<Long> saveDeliveryStatus(String notificationIdentifier);
 
     Mono<Boolean> existsDeliveryStatus(String notificationIdentifier);
 }

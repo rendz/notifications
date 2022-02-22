@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.core.reactive.ReactiveKafkaConsumerTemplate;
 import reactor.kafka.receiver.ReceiverOptions;
 
+import java.time.Duration;
 import java.util.Collections;
 
 @Configuration
@@ -15,7 +16,11 @@ public class KafkaConsumerConfig {
     public ReceiverOptions<String, Notification> kafkaReceiverOptions(KafkaProperties kafkaProperties) {
         ReceiverOptions<String, Notification> basicReceiverOptions = ReceiverOptions
                 .create(kafkaProperties.buildConsumerProperties());
-        return basicReceiverOptions.subscription(Collections.singletonList("notifications"));
+
+        return basicReceiverOptions
+                .commitInterval(Duration.ZERO)
+                .commitBatchSize(0)
+                .subscription(Collections.singletonList("notifications"));
     }
 
     @Bean

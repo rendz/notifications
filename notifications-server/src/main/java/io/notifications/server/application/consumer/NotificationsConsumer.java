@@ -9,6 +9,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.kafka.core.reactive.ReactiveKafkaConsumerTemplate;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
+import reactor.kafka.receiver.ReceiverRecord;
 
 @Service
 public class NotificationsConsumer implements CommandLineRunner {
@@ -24,21 +25,30 @@ public class NotificationsConsumer implements CommandLineRunner {
         this.notificationService = notificationService;
     }
 
-    private Flux<Notification> consumeEmailNotification() {
+    private Flux<?> consumeEmailNotification() {
         return kafkaConsumerTemplate
-                .receiveAutoAck()
-                .doOnNext(consumerRecord ->
-                        log.info("received key={}, value={} from topic={}, offset={}",
-                                consumerRecord.key(),
-                                consumerRecord.value(),
-                                consumerRecord.topic(),
-                                consumerRecord.offset())
-                )
-                .map(ConsumerRecord::value)
-                .doOnNext(notificationService::deliverNotification)
-                .doOnError(throwable -> log.error(
-                        "something bad happened while consuming : {}",
-                        throwable.getMessage()));
+                .receive()
+                .concatMap(consumerRecord -> {
+                    log.info(
+                            "received key={}, value={} from topic={}, offset={}",
+                            consumerRecord.key(),
+                            consumerRecord.value(),
+                            consumerRecord.topic(),
+                            consumerRecord.offset());
+
+                    return notificationService
+                            .deliverNotification(consumerRecord.value())
+                            .map(record -> {
+                                log.info("Ack");
+                                consumerRecord.receiverOffset().acknowledge();
+                                return record;
+                            });
+                })
+                .onErrorContinue((err, obj) -> {
+                    log.error(
+                            "something bad happened while consuming : {}",
+                            err.getMessage());
+                });
     }
 
     @Override
